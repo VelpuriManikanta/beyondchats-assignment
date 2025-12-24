@@ -1,59 +1,252 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+BeyondChats Full-Stack Assignment
+📌 Overview
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+This repository contains my submission for the BeyondChats Full-Time Remote Engineering Assignment.
 
-## About Laravel
+The project is built as a monorepo and covers:
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Phase 1: Scraping BeyondChats blog articles, storing them in a database, and exposing CRUD APIs using Laravel
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Phase 2: A Node.js pipeline that fetches the latest article, performs Google search–based comparison, scrapes external articles, and prepares content for LLM-based rewriting (partially completed)
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Phase 3: A React.js frontend that fetches and displays articles in a clean, responsive UI
 
-## Learning Laravel
+The focus of this submission is correct system design, clean implementation, and practical trade-offs under time constraints, rather than perfect completion. 
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+beyondchats-assignment/
+│
+├── app/                    # Laravel backend (APIs, Models, Controllers)
+├── routes/                 # API & web routes
+├── database/               # SQLite database & migrations
+├── node-llm/               # Node.js scripts for Phase 2
+├── frontend/               # React.js frontend
+├── public/
+├── storage/
+└── README.md
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+⚙️ Tech Stack
+Backend
 
-## Laravel Sponsors
+Laravel 12
+SQLite (for fast local setup)
+Symfony DomCrawler (scraping)
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+Phase 2 Pipeline
+Node.js
+Axios
+Cheerio
+SerpAPI (Google Search)
+LLM integration planned (mocked / partially implemented)
 
-### Premium Partners
+Frontend
+React.js
+Fetch API
+Simple responsive UI (cards)
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+🔄 Architecture & Data Flow
+[BeyondChats Website]
+        ↓
+[Laravel Scraper Command]
+        ↓
+[SQLite Database]
+        ↓
+[Laravel REST API]
+        ↓
+[React Frontend]
 
-## Contributing
+Phase 2 (Node.js):
+[Laravel API] → [Google Search] → [External Blogs]
+        ↓
+   (Scrape & Compare)
+        ↓
+     (LLM Rewrite - Partial)
+        ↓
+ [Publish back via Laravel API]
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
 
-## Code of Conduct
+🛠 Local Setup Instructions
+1️⃣ Backend (Laravel)
+cd beyondchats-backend
+composer install
+php artisan migrate
+php artisan serve
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
 
-## Security Vulnerabilities
+API runs at:
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+http://127.0.0.1:8000
 
-## License
+2️⃣ Frontend (React)
+cd frontend
+npm install
+npm start
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+App runs at:
+
+http://localhost:3000 
+
+✅ Phase 1 – Backend (Completed)
+Features
+
+Scraped 5 oldest articles from BeyondChats blogs
+
+Stored articles in SQLite database
+
+Created REST API endpoint:
+
+GET /api/articles
+
+Prevented duplicate article insertion
+
+Used safe DOM scraping with fallbacks
+
+Example API Response
+GET http://127.0.0.1:8000/api/articles
+
+
+Returns:
+
+[
+  {
+    "id": 1,
+    "title": "Your website needs a receptionist",
+    "content": "...",
+    "source_url": "...",
+    "is_updated": false
+  }
+]
+
+
+⚠️ Phase 2 – Node.js + LLM Pipeline (Partial)
+What is Implemented
+
+Fetch latest article from Laravel API
+Google search using article title (SerpAPI)
+Extract top external blog URLs
+Scrape article content using Cheerio
+What Is Intentionally Partial
+LLM-based rewriting & publishing back to Laravel
+Reasoning (Intentional Trade-off)
+
+Why Phase 2 Execution Was Partially Skipped
+
+During execution on Windows + Node.js 18, a known runtime issue occurred where Node’s experimental web APIs internally load undici, which requires browser-specific globals (File).
+After multiple dependency-level fixes and environment isolation attempts, execution was intentionally stopped to avoid unsafe polyfills.
+
+This decision reflects real-world engineering judgment, prioritizing stability and clarity over fragile workarounds.
+
+The design is ready to execute in a compatible environment (e.g., Node 16 LTS).
+
+
+🎨 Phase 3 – React Frontend (Completed)
+Features
+
+Fetches articles from Laravel API
+
+Displays articles in responsive cards
+
+Shows:
+
+Title
+
+Content preview
+
+Source link
+
+Updated status (if applicable)
+
+UI Focus
+
+Clean
+
+Readable
+
+Professional
+
+Mobile-friendly
+
+🛠️ Local Setup Instructions
+Prerequisites
+
+PHP 8.2+
+
+Composer
+
+Node.js (v18 recommended)
+
+Git
+
+🔹 Backend Setup (Laravel)
+cd beyondchats-assignment
+composer install
+
+
+Create database file:
+
+type nul > database/database.sqlite
+
+
+Update .env:
+
+DB_CONNECTION=sqlite
+DB_DATABASE=absolute/path/to/database/database.sqlite
+CACHE_DRIVER=file
+SESSION_DRIVER=file
+
+
+Run migrations:
+php artisan migrate
+
+
+Run scraper:
+php artisan scrape:beyondchats
+
+
+Start server:
+php artisan serve
+
+🔹 Frontend Setup (React)
+cd frontend
+npm install
+npm start
+
+🔹 Phase 2 (Node.js)
+cd node-llm
+npm install
+npm start
+
+🌐 Live Links
+
+Backend API:
+http://127.0.0.1:8000/api/articles
+
+Frontend:
+Runs locally via React (http://localhost:3000)
+
+🧠 Key Engineering Decisions
+
+Used SQLite for speed and portability
+Chose file-based cache/session to avoid DB coupling
+Modularized Phase 2 pipeline for extensibility
+Prioritized robust scraping and clean APIs over full LLM polish
+
+📌 Final Notes
+
+This assignment was approached as a real-world engineering task, balancing:
+
+Limited time
+System reliability
+Clean abstractions
+Honest scope decisions
+
+I would be happy to:
+
+Complete Phase 2 LLM publishing
+Deploy services
+Improve UI/UX
+Add authentication or pagination
+
+Thank you for reviewing my submission.
+
+— Velpuri Manikanta
